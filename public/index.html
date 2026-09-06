@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Memory Hub - מרכז זיכרון והשתלה אוטומטית למודלים</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Heebo / Rubik -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-['Heebo'] antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Background Glowing Orbs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 -right-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Top Navigation & Header -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
+          <span class="text-2xl">🧠</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+              Universal AI Memory Hub
+            </h1>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-medium border border-indigo-500/30">
+              v1.0
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400">
+            ניהול זיכרון קבוע והשתלה אוטומטית ל-Claude Desktop, Antigravity, VS Code, Cursor ועוד
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Auto Sync Toggle -->
+        <label class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 cursor-pointer hover:bg-slate-800/60 transition">
+          <input type="checkbox" id="auto-sync-toggle" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+          <span>סנכרון אוטומטי בעדכון</span>
+        </label>
+
+        <!-- Sync Now Button -->
+        <button id="btn-sync-all" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 active:scale-95 transition">
+          <span id="sync-spinner" class="hidden animate-spin">⏳</span>
+          <span id="sync-icon">⚡</span>
+          <span>השתל זיכרון לכל הכלים</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+      <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+          🔍
+        </div>
+        <div>
+          <div class="text-xs text-slate-400 font-medium">מודלים מזוהים במחשב</div>
+          <div id="stat-detected-tools" class="text-lg font-bold text-white">טוען...</div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">
+          📝
+        </div>
+        <div>
+          <div class="text-xs text-slate-400 font-medium">עובדות פעילות בזיכרון</div>
+          <div id="stat-facts-count" class="text-lg font-bold text-white">טוען...</div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-lg">
+          🔌
+        </div>
+        <div>
+          <div class="text-xs text-slate-400 font-medium">שרת MCP אינטגרלי</div>
+          <div id="stat-mcp-status" class="text-sm font-bold text-purple-300">פעיל (Claude & Anti)</div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg">
+          🕒
+        </div>
+        <div>
+          <div class="text-xs text-slate-400 font-medium">סנכרון אחרון</div>
+          <div id="stat-last-sync" class="text-xs font-semibold text-slate-300">טרם בוצע</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Input Box (Natural Language) -->
+    <div class="mb-6 bg-gradient-to-r from-slate-900/90 to-indigo-950/40 backdrop-blur border border-indigo-500/30 rounded-2xl p-4 shadow-xl shadow-indigo-950/20">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-base">✨</span>
+          <span class="text-sm font-semibold text-indigo-200">הוספה חכמה לזיכרון (Natural Language)</span>
+        </div>
+        <span class="text-xs text-slate-400">למשל: "תוסיף למטה את האתר שלי: example.com" או "שפת פיתוח מועדפת: React"</span>
+      </div>
+      <form id="quick-add-form" class="flex flex-col sm:flex-row gap-2">
+        <input 
+          type="text" 
+          id="quick-add-input" 
+          placeholder="הקלד כאן עובדה או מידע שתרצה שה-AI יזכור מעתה ואילך..." 
+          class="flex-1 bg-slate-950/80 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+          required
+        >
+        <button 
+          type="submit" 
+          class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition flex items-center justify-center gap-2 whitespace-nowrap shadow-md shadow-indigo-600/30"
+        >
+          <span>➕</span>
+          <span>שמור בזיכרון</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="flex items-center gap-2 border-b border-slate-800 mb-6 pb-2 overflow-x-auto">
+      <button class="tab-btn active px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2" data-tab="tab-memories">
+        <span>💾</span>
+        <span>מאגר הזיכרון</span>
+        <span id="tab-badge-count" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">0</span>
+      </button>
+
+      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-tools">
+        <span>🤖</span>
+        <span>כלי AI במחשב</span>
+        <span id="tab-badge-tools" class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">מזוהים</span>
+      </button>
+
+      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-preview">
+        <span>👁️</span>
+        <span>תצוגה מקדימה ל-AI</span>
+      </button>
+
+      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-settings">
+        <span>⚙️</span>
+        <span>הגדרות והשתלה</span>
+      </button>
+
+      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-logs">
+        <span>📋</span>
+        <span>יומן פעולות</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: MEMORIES LIST -->
+    <section id="tab-memories" class="tab-content">
+      <!-- Search & Category Filters -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
+        <div class="relative w-full sm:w-80">
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="חיפוש בזיכרון..." 
+            class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+          >
+          <span class="absolute left-3 top-2.5 text-slate-500 text-sm">🔍</span>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1" id="category-chips">
+          <button class="cat-chip active text-xs px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium" data-category="all">
+            הכל
+          </button>
+          <!-- Dynamic Category Chips loaded via JS -->
+        </div>
+
+        <button id="btn-open-add-modal" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium transition flex items-center justify-center gap-1.5 border border-slate-700">
+          <span>+</span>
+          <span>עובדה חדשה מפורטת</span>
+        </button>
+      </div>
+
+      <!-- Facts Grid / Cards -->
+      <div id="facts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Facts injected via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: AI TOOLS DETECTOR -->
+    <section id="tab-tools" class="tab-content hidden">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-base font-bold text-white">כלי AI שנמצאו בסריקת המחשב</h2>
+          <p class="text-xs text-slate-400">המערכת מאתרת אוטומטית את הנתיבים וקובצי הקונפיגורציה של כלי הפיתוח והצ'אט המותקנים</p>
+        </div>
+        <button id="btn-rescan-tools" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+          <span>🔄</span>
+          <span>סרוק מחדש</span>
+        </button>
+      </div>
+
+      <div id="tools-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Tools cards loaded via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 3: PROMPT PREVIEW -->
+    <section id="tab-preview" class="tab-content hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white">תצוגה מקדימה של בלוק הזיכרון המושתל</h3>
+            <p class="text-xs text-slate-400">זהו הטקסט המדויק שנשתל בקובצי ההוראות וב-MCP של ה-AI בכל שיחה חדשה:</p>
+          </div>
+          <button id="btn-copy-preview" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 transition">
+            📋 העתק טקסט
+          </button>
+        </div>
+        <pre id="preview-content" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-emerald-400/90 whitespace-pre-wrap overflow-x-auto border border-slate-800/80 leading-relaxed"></pre>
+      </div>
+    </section>
+
+    <!-- TAB 4: SETTINGS & INJECTION FOLDERS -->
+    <section id="tab-settings" class="tab-content hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Target Folders Config -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+            <span>📁</span>
+            <span>תיקיות פרויקטים להשתלת קובצי כללים (CLAUDE.md / GEMINI.md / .cursorrules)</span>
+          </h3>
+          <p class="text-xs text-slate-400 mb-4">
+            בכל תיקייה שתוסיף כאן, המערכת תשתול או תעדכן אוטומטית את קובצי הכללים של המודלים עם הזיכרון העדכני.
+          </p>
+
+          <form id="add-folder-form" class="flex gap-2 mb-4">
+            <input 
+              type="text" 
+              id="new-folder-path" 
+              placeholder="נתיב מלא לתיקיית פרויקט (למשל: C:\Projects\MyProject)" 
+              class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+            >
+            <button type="submit" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-medium">
+              הוסף
+            </button>
+          </form>
+
+          <div id="folders-list" class="space-y-2">
+            <!-- Folders loaded via JS -->
+          </div>
+        </div>
+
+        <!-- Injection Features Toggle -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+            <span>⚙️</span>
+            <span>אפשרויות השתלה מתקדמות</span>
+          </h3>
+          <p class="text-xs text-slate-400 mb-4">בחר באילו ערוצים תרצה להשתיל את הזיכרון בכל סנכרון:</p>
+
+          <div class="space-y-3">
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 cursor-pointer hover:bg-slate-950 transition">
+              <input type="checkbox" id="setting-claude-mcp" checked class="mt-1 rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+              <div>
+                <div class="text-xs font-semibold text-white">השתלת שרת MCP ב-Claude Desktop</div>
+                <div class="text-[11px] text-slate-400">מאפשר לקלוד לקרוא את הזיכרון ולשמור זיכרונות חדשים בעצמו בשיחה</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 cursor-pointer hover:bg-slate-950 transition">
+              <input type="checkbox" id="setting-anti-knowledge" checked class="mt-1 rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+              <div>
+                <div class="text-xs font-semibold text-white">השתלת ידע קבוע ב-Antigravity (.gemini)</div>
+                <div class="text-[11px] text-slate-400">יוצר קובץ זיכרון ב-knowledge directory של Antigravity לשימוש בכל המשימות</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 cursor-pointer hover:bg-slate-950 transition">
+              <input type="checkbox" id="setting-project-rules" checked class="mt-1 rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+              <div>
+                <div class="text-xs font-semibold text-white">השתלת קובצי כללים (CLAUDE.md / GEMINI.md / .cursorrules)</div>
+                <div class="text-[11px] text-slate-400">כותב את בלוק הזיכרון לתוך קובצי ההוראות של הפרויקטים הפעילים</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: LOGS -->
+    <section id="tab-logs" class="tab-content hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+        <h3 class="text-sm font-bold text-white mb-3">יומן סנכרונים ופעולות זיכרון</h3>
+        <div id="logs-container" class="space-y-2 max-h-96 overflow-y-auto font-mono text-xs">
+          <!-- Logs loaded via JS -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Modal: Add / Edit Fact -->
+  <div id="fact-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <h3 id="modal-title" class="text-base font-bold text-white mb-4">הוספת עובדה חדשה לזיכרון</h3>
+
+      <form id="fact-form" class="space-y-4">
+        <input type="hidden" id="modal-fact-id">
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">קטגוריה</label>
+          <select id="modal-category" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <option value="אתרים וקישורים">אתרים וקישורים</option>
+            <option value="פרטים אישיים ועסקיים">פרטים אישיים ועסקיים</option>
+            <option value="העדפות פיתוח וקוד">העדפות פיתוח וקוד</option>
+            <option value="הנחיות כלליות ומענה">הנחיות כלליות ומענה</option>
+            <option value="הערות נוספות">הערות נוספות</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">כותרת / מפתח (Key)</label>
+          <input 
+            type="text" 
+            id="modal-key" 
+            placeholder="למשל: האתר הראשי שלי, שם החברה, סגנון עיצוב..." 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">ערך / תוכן (Value)</label>
+          <textarea 
+            id="modal-value" 
+            rows="3" 
+            placeholder="למשל: https://example.com או שפת קוד מועדפת היא פייתון..." 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            required
+          ></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="modal-active" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+          <label for="modal-active" class="text-xs text-slate-300">פעיל בזיכרון (יושתל ל-AI)</label>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-800">
+          <button type="button" id="btn-close-modal" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300">
+            ביטול
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-medium">
+            שמור
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-800 text-white text-xs shadow-2xl border border-slate-700 pointer-events-none">
+    <span id="toast-icon">✅</span>
+    <span id="toast-message">פעולה בוצעה בהצלחה</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

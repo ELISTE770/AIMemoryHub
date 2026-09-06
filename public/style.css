@@ -1,0 +1,45 @@
+/* Custom Styles for AI Memory Hub */
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Active tab button */
+.tab-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+/* Card hover glow */
+.memory-card {
+  transition: all 0.2s ease-in-out;
+}
+.memory-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.8), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
+}
+
+/* Toast show state */
+.toast-visible {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Pulse indicator */
+.online-dot {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+}

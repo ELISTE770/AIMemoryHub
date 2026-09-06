@@ -1,0 +1,14 @@
+# Runtime dependencies for Universal AI Memory Hub
+# Install with:  pip install -r requirements.txt
+
+customtkinter>=5.2
+requests>=2.31
+pillow>=10.0
+
+# Optional but recommended - the app degrades gracefully without them
+# (system tray icon and the Ctrl+Alt+M global hotkey are disabled if missing).
+pystray>=0.19
+keyboard>=0.13
+
+# The test suite uses only the standard library (unittest), so nothing extra is
+# required to run:  python -m unittest discover -s tests

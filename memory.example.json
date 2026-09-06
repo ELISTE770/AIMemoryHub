@@ -1,0 +1,156 @@
+{
+  "version": "1.0.1",
+  "lastUpdated": "2026-09-04T00:00:00.000000",
+  "currentProfile": "default",
+  "profiles": {
+    "default": {
+      "name": "ראשי (כללי)",
+      "data": {
+        "facts": [
+          {
+            "id": "info_default_site",
+            "name": "האתר שלי",
+            "value": "example.com",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "commands": [
+          {
+            "id": "cmd_default_sig",
+            "name": "חתימה אישית",
+            "details": "לצרף בסוף התשובה: 'בברכה, [שמך]'",
+            "trigger_case": "בסיום מענה למיילים, תבניות רשמיות או פונקציות מרכזיות",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "constraints": [
+          {
+            "id": "const_default_comments",
+            "constraint": "לעולם אל תמחק או תחליף הערות קוד או תיעוד קיים בקוד",
+            "alternative_or_why": "שמור על כל התיעוד הקיים במלואו והוסף עליו במידת הצורך",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "styles": [
+          {
+            "id": "style_default_lang",
+            "aspect": "שפה וניסוח",
+            "instruction": "ענה תמיד בעברית רהוטה, טבעית ומקצועית (הימנע לחלוטין מתרגום מכונה צורם)",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "instructions": [
+          {
+            "id": "inst_default_lang",
+            "instruction": "ענה תמיד בעברית רהוטה וברורה ומסודרת",
+            "when_to_apply": "בכל שיחה ומענה",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "context_files": []
+      }
+    },
+    "code": {
+      "name": "פיתוח קוד",
+      "data": {
+        "facts": [],
+        "commands": [
+          {
+            "id": "cmd_code_types",
+            "name": "הקלדה קפדנית",
+            "details": "הקפד על Type Hinting מלא בפייתון או טיפוסי TypeScript ללא שימוש ב-any",
+            "trigger_case": "בכל כתיבת פונקציה או מודול",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "constraints": [
+          {
+            "id": "const_code_clean",
+            "constraint": "אל תשאיר קוד debug או print/console.log מיותרים",
+            "alternative_or_why": "השתמש ב-logging מסודר בלבד",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "styles": [
+          {
+            "id": "style_code_brevity",
+            "aspect": "סגנון מענה",
+            "instruction": "היה תמציתי וממוקד בקוד, ללא הסברים ארכניים",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "instructions": [],
+        "context_files": []
+      }
+    },
+    "business": {
+      "name": "עסקי (דוגמה)",
+      "data": {
+        "facts": [
+          {
+            "id": "fact_biz_name",
+            "name": "שם העסק",
+            "value": "העסק שלי - פתרונות תוכנה ומחשוב",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "commands": [],
+        "constraints": [],
+        "styles": [
+          {
+            "id": "style_biz_tone",
+            "aspect": "טון דיבור",
+            "instruction": "טון מכובד, מקצועי ושירותי ברמה הגבוהה ביותר",
+            "scope": "global",
+            "active": true,
+            "createdAt": "2026-09-04T00:00:00.000000"
+          }
+        ],
+        "instructions": [],
+        "context_files": []
+      }
+    }
+  },
+  "settings": {
+    "geminiApiKey": "",
+    "githubGistToken": "",
+    "githubGistId": "",
+    "autoCloudSync": false,
+    "appearanceMode": "dark",
+    "colorTheme": "blue",
+    "syncScopeMode": "macro",
+    "cleanProjectsOnMacro": false,
+    "injectClaudeMcp": true,
+    "injectAntigravityKnowledge": true,
+    "injectProjectRules": true,
+    "autoSyncOnChange": true,
+    "folderWatcherActive": true,
+    "minimizeToTray": false
+  },
+  "targetPaths": [],
+  "logs": [
+    {
+      "timestamp": "2026-09-04T00:00:00.000000",
+      "action": "init",
+      "message": "אותחל מאגר הזיכרון החכם v1.0.1"
+    }
+  ]
+}

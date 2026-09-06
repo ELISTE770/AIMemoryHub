@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal AI Memory Hub</title>
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-subtle: #e0f2fe;
+      --danger: #ef4444;
+      --danger-subtle: #fef2f2;
+      --success: #10b981;
+      --success-subtle: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-subtle: #fffbeb;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg-main: #0b0f19;
+      --bg-card: #131b2e;
+      --bg-card-subtle: #1a243b;
+      --border-color: #23314f;
+      --border-hover: #33446b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #38bdf8;
+      --accent-hover: #7dd3fc;
+      --accent-subtle: #082f49;
+      --danger: #f87171;
+      --danger-subtle: #450a0a;
+      --success: #34d399;
+      --success-subtle: #064e3b;
+      --warning: #fbbf24;
+      --warning-subtle: #451a03;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #6366f1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .profile-select-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-card-subtle);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      font-size: 0.875rem;
+    }
+
+    .profile-select-wrapper select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #ffffff;
+    }
+    .btn-primary:hover { background-color: var(--accent-hover); }
+
+    .btn-subtle {
+      background-color: var(--bg-card-subtle);
+      border-color: var(--border-color);
+      color: var(--text-secondary);
+    }
+    .btn-subtle:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-subtle);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+    .btn-danger:hover {
+      background-color: var(--danger);
+      color: #ffffff;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+    .theme-toggle:hover { color: var(--text-primary); }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .conflict-banner {
+      display: none;
+      background-color: var(--danger-subtle);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .conflict-content h4 {
+      color: var(--danger);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .conflict-content p {
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .app-layout {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      width: 100%;
+      min-height: calc(100vh - 61px);
+    }
+
+    .sidebar-nav {
+      width: 250px;
+      min-width: 250px;
+      background-color: var(--bg-card);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-nav-inner {
+      position: sticky;
+      top: 61px;
+      padding: 1.2rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      max-height: calc(100vh - 61px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      padding: 0.6rem 0.75rem 0.25rem 0.75rem;
+      user-select: none;
+    }
+
+    .tab-btn {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid transparent;
+      border-right: 3px solid transparent;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: inherit;
+      text-align: right;
+      justify-content: flex-start;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-card-subtle);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      background: var(--accent-subtle);
+      font-weight: 700;
+      border-right-color: var(--accent);
+    }
+
+    .tab-icon {
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      flex-shrink: 0;
+    }
+
+    .tab-label {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 1300px;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .tab-page {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .tab-page.active { display: flex; }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .card-desc {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+    }
+
+    .chat-box {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card-subtle);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s ease;
+      font-family: inherit;
+    }
+    .chat-input:focus { border-color: var(--accent); }
+
+    .example-chips {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      transition: border-color 0.15s ease;
+    }
+    .item-row:hover { border-color: var(--border-hover); }
+
+    .item-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .item-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .item-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+
+    .badge {
+      font-size: 0.725rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-fact { background: var(--accent-subtle); color: var(--accent); }
+    .badge-constraint { background: var(--danger-subtle); color: var(--danger); }
+    .badge-style { background: var(--success-subtle); color: var(--success); }
+    .badge-cmd { background: var(--warning-subtle); color: var(--warning); }
+    .badge-inst { background: #ede9fe; color: #7c3aed; }
+    [data-theme="dark"] .badge-inst { background: #2e1065; color: #c084fc; }
+
+    .item-detail {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-icon-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .action-icon-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+    .action-icon-btn.danger:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 22px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--border-color);
+      transition: .2s;
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--accent); }
+    input:checked + .slider:before { transform: translateX(16px); }
+
+    .scope-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    .scope-card {
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      background: var(--bg-card);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .scope-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .scope-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .scope-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .scope-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .scope-badge {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .scope-badge-recommend {
+      background: #059669;
+      color: #fff;
+    }
+    .scope-badge-secondary {
+      background: var(--bg-card-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    .scope-desc {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin-bottom: 0.85rem;
+    }
+    .scope-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      background: var(--bg-card-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.85rem;
+      font-size: 0.78rem;
+      border: 1px solid var(--border-color);
+    }
+    .scope-metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .scope-metric-label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    /* KPI Metric Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kpi-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .kpi-icon {
+      font-size: 1.35rem;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card-subtle);
+    }
+    .kpi-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Analytics Grid & Visualizations */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 900px) {
+      .analytics-grid { grid-template-columns: 1fr; }
+    }
+    .chart-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 0.8rem 0;
+    }
+    .chart-svg-wrap {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      flex-shrink: 0;
+    }
+    .chart-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+    .chart-center-val {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .chart-center-lbl {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .chart-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 160px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.825rem;
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s ease;
+    }
+    .legend-item:hover {
+      background: var(--bg-card-subtle);
+    }
+    .legend-dot-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-count {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .progress-bar-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .progress-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.825rem;
+      font-weight: 600;
+    }
+    .progress-track {
+      width: 100%;
+      height: 9px;
+      background: var(--bg-card-subtle);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.4s ease;
+    }
+
+    /* Quick Actions */
+    .quick-actions-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .quick-action-btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 0.75rem 1rem;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .quick-action-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Search Filter Chips */
+    .filter-chips-row {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 0.85rem;
+      padding: 0.25rem 0;
+    }
+    .filter-chip {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 16px;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .filter-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .filter-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 520px;
+      max-height: 85vh;
+      overflow-y: auto;
+      width: 100%;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title { font-size: 1.15rem; font-weight: 700; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card-subtle);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      left: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1.25rem;
+      box-shadow: var(--shadow-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 150;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s ease;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-wrap: wrap;
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+      }
+      .brand { flex: 1; }
+      .header-search {
+        order: 3;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0.25rem 0 !important;
+      }
+      .header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .container { padding: 1rem; }
+      .app-layout {
+        flex-direction: column;
+      }
+      .sidebar-nav {
+        width: 100%;
+        min-width: 100%;
+        border-left: none;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: none;
+      }
+      .sidebar-nav-inner {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+        max-height: none;
+        padding: 0.5rem;
+        gap: 0.35rem;
+      }
+      .sidebar-section-title {
+        display: none;
+      }
+      .tab-btn {
+        width: auto;
+        padding: 0.45rem 0.8rem;
+        border-right: none;
+      }
+      .tab-btn.active {
+        border-bottom: 2px solid var(--accent);
+      }
+      .main-content {
+        padding: 1rem;
+      }
+      .item-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      .item-actions {
+        justify-content: flex-end;
+      }
+      .modal {
+        padding: 1.2rem;
+        margin: 0.5rem;
+        max-height: 90vh;
+      }
+      .toast {
+        right: 1rem;
+        bottom: 1rem;
+      }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="/app_icon.png">
+</head>
+<body data-theme="light">
+
+  <header>
+    <div class="brand">
+      <img src="/app_icon.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; box-shadow: var(--shadow-sm); object-fit: contain;" onerror="this.outerHTML='<div class=\'brand-logo\'>🧠</div>'">
+      <div>
+        <div class="brand-title">Universal AI Memory Hub <span style="font-size: 0.72rem; font-weight: 600; color: var(--accent); background: var(--accent-subtle); padding: 2px 6px; border-radius: 10px; margin-right: 4px;">v1.0.1</span></div>
+      </div>
+    </div>
+
+    <div class="header-search" style="flex: 1; max-width: 340px; margin: 0 1rem;">
+      <input type="text" id="globalSearchInput" class="chat-input" style="width: 100%; padding: 0.4rem 0.8rem; font-size: 0.85rem;" placeholder="🔍 חיפוש חכם בכל הזיכרונות..." oninput="onGlobalSearch(this.value)">
+    </div>
+
+    <div class="header-actions">
+      <div class="profile-select-wrapper">
+        <span>סביבת עבודה:</span>
+        <select id="profileSelector" onchange="switchProfile(this.value)">
+          <option value="default">ראשי (כללי)</option>
+          <option value="business">עסקי (דוגמה)</option>
+          <option value="code">פיתוח קוד</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="btnSyncAll" onclick="triggerSync()">
+        <span>סנכרן לכל הפרויקטים</span>
+      </button>
+
+      <button class="theme-toggle" onclick="toggleTheme()" title="החלף מצב תצוגה">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar-nav tabs-nav" aria-label="תפריט ראשי">
+      <div class="sidebar-nav-inner">
+        <div class="sidebar-section-title">סקירה ובקרה</div>
+        <button class="tab-btn active" onclick="showTab('tab-overview')"><span class="tab-icon">📊</span><span class="tab-label">סקירה ולוח בקרה</span></button>
+
+        <div class="sidebar-section-title" style="margin-top: 0.6rem;">הוראות וזיכרון</div>
+        <button class="tab-btn" onclick="showTab('tab-chat')"><span class="tab-icon">💬</span><span class="tab-label">שיחה וניהול חופשי</span></button>
+        <button class="tab-btn" onclick="showTab('tab-facts')"><span class="tab-icon">📋</span><span class="tab-label">עובדות ונתונים</span></button>
+        <button class="tab-btn" onclick="showTab('tab-constraints')"><span class="tab-icon">⛔</span><span class="tab-label">מגבלות ואיסורים</span></button>
+        <button class="tab-btn" onclick="showTab('tab-commands')"><span class="tab-icon">⚡</span><span class="tab-label">פקודות וחתימות</span></button>
+        <button class="tab-btn" onclick="showTab('tab-styles')"><span class="tab-icon">🎨</span><span class="tab-label">סגנון וטון</span></button>
+        <button class="tab-btn" onclick="showTab('tab-instructions')"><span class="tab-icon">🛡️</span><span class="tab-label">הנחיות מותנות</span></button>
+        <button class="tab-btn" onclick="showTab('tab-context_files')"><span class="tab-icon">📚</span><span class="tab-label">מסמכי הקשר</span></button>
+
+        <div class="sidebar-section-title" style="margin-top: 0.85rem;">כלים ומערכת</div>
+        <button class="tab-btn" onclick="showTab('tab-projects')"><span class="tab-icon">📁</span><span class="tab-label">פרויקטים מסונכרנים</span></button>
+        <button class="tab-btn" onclick="showTab('tab-profiles')"><span class="tab-icon">🎭</span><span class="tab-label">מצבים ופרופילים</span></button>
+        <button class="tab-btn" onclick="showTab('tab-miner')"><span class="tab-icon">⛏️</span><span class="tab-label">כריית שיחות</span></button>
+        <button class="tab-btn" onclick="showTab('tab-sim')"><span class="tab-icon">🧪</span><span class="tab-label">סימולטור מענה חי</span></button>
+        <button class="tab-btn" onclick="showTab('tab-settings')"><span class="tab-icon">⚙️</span><span class="tab-label">הגדרות וגיבוי</span></button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="conflict-banner" id="conflictBanner">
+        <div class="conflict-content">
+          <h4 id="conflictTitle">⚠️ זוהתה סתירה בזיכרון</h4>
+          <p id="conflictDesc">קיימים חוקים או עובדות מתחרות.</p>
+        </div>
+        <button class="btn btn-danger" onclick="resolveTopConflict()">פתור סתירה (הסר פריט ישן)</button>
+      </div>
+
+      <!-- Search Results Live Container -->
+      <div class="card" id="searchResultsCard" style="display: none; border-color: var(--accent);">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="searchResultsTitle">תוצאות חיפוש</div>
+            <div class="card-desc" id="searchResultsDesc"></div>
+          </div>
+          <button class="action-icon-btn" onclick="closeSearchResults()">✕ סגור חיפוש</button>
+        </div>
+        <!-- Live Filter Chips for Category and Status -->
+        <div class="filter-chips-row" id="searchFilterChips">
+          <span class="filter-chip active" id="chip_cat_all" onclick="setSearchCatFilter('all')">הכל</span>
+          <span class="filter-chip" id="chip_cat_facts" onclick="setSearchCatFilter('facts')">📌 עובדות</span>
+          <span class="filter-chip" id="chip_cat_constraints" onclick="setSearchCatFilter('constraints')">⛔ איסורים</span>
+          <span class="filter-chip" id="chip_cat_commands" onclick="setSearchCatFilter('commands')">⚡ פקודות</span>
+          <span class="filter-chip" id="chip_cat_styles" onclick="setSearchCatFilter('styles')">🎨 סגנון</span>
+          <span class="filter-chip" id="chip_cat_instructions" onclick="setSearchCatFilter('instructions')">🛡️ הנחיות</span>
+          <span class="filter-chip" id="chip_cat_context_files" onclick="setSearchCatFilter('context_files')">📚 מסמכים</span>
+          <span style="border-right: 1px solid var(--border-color); height: 16px; margin: 0 4px;"></span>
+          <span class="filter-chip active" id="chip_status_all" onclick="setSearchStatusFilter('all')">כל הסטטוסים</span>
+          <span class="filter-chip" id="chip_status_active" onclick="setSearchStatusFilter('active')">פעיל בלבד</span>
+          <span class="filter-chip" id="chip_status_inactive" onclick="setSearchStatusFilter('inactive')">מושבת</span>
+        </div>
+        <div class="items-list" id="searchResultsList"></div>
+      </div>
+
+    <!-- 0. Tab: Primary Overview & Analytics Dashboard -->
+    <section id="tab-overview" class="tab-page active">
+      <!-- 4 Core Metric KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card" onclick="showTab('tab-facts')" style="cursor: pointer;" title="לחץ לצפייה בכל ההוראות">
+          <div class="kpi-top">
+            <span class="kpi-title">סך כל ההוראות והחוקים</span>
+            <span class="kpi-icon" style="color: var(--accent);">🧠</span>
+          </div>
+          <div class="kpi-value" id="kpiTotalDirectives">0</div>
+          <div class="kpi-sub" id="kpiTotalDirectivesSub">טוען נתונים...</div>
+        </div>
+
+        <div class="kpi-card" onclick="showTab('tab-facts')" style="cursor: pointer;" title="הוראות המוזרקות באופן פעיל לכלים">
+          <div class="kpi-top">
+            <span class="kpi-title">הוראות פעילות כעת</span>
+            <span class="kpi-icon" style="color: var(--success);">⚡</span>
+          </div>
+          <div class="kpi-value" id="kpiActiveDirectives" style="color: var(--success);">0</div>
+          <div class="kpi-sub" id="kpiActiveDirectivesSub">פעילות מירבית</div>
+        </div>
+
+        <div class="kpi-card" onclick="showTab('tab-projects')" style="cursor: pointer;" title="לחץ לניהול תיקיות פרויקטים">
+          <div class="kpi-top">
+            <span class="kpi-title">פרויקטים מסונכרנים</span>
+            <span class="kpi-icon" style="color: var(--warning);">📁</span>
+          </div>
+          <div class="kpi-value" id="kpiTotalProjects">0</div>
+          <div class="kpi-sub" id="kpiTotalProjectsSub">כל הפרויקטים מעודכנים</div>
+        </div>
+
+        <div class="kpi-card" onclick="showTab('tab-profiles')" style="cursor: pointer;" title="לחץ לניהול פרופילים ומצבים">
+          <div class="kpi-top">
+            <span class="kpi-title">סביבת עבודה פעילה</span>
+            <span class="kpi-icon" style="color: #8b5cf6;">🎭</span>
+          </div>
+          <div class="kpi-value" id="kpiActiveProfile" style="font-size: 1.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ראשי</div>
+          <div class="kpi-sub" id="kpiActiveProfileSub">לחץ להחלפת סביבה</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions Bar -->
+      <div class="card">
+        <div class="card-header" style="margin-bottom: 0.6rem; padding-bottom: 0.5rem;">
+          <div class="card-title" style="font-size: 0.95rem;">⚡ פעולות מהירות למנהל הזיכרון</div>
+        </div>
+        <div class="quick-actions-row">
+          <button class="quick-action-btn" onclick="showTab('tab-chat'); document.getElementById('chatInput').focus();">
+            <span>💬</span><span>הוסף זיכרון בשיחה חופשית</span>
+          </button>
+          <button class="quick-action-btn" onclick="triggerSync()">
+            <span>🔄</span><span>סנכרן עכשיו לכל הפרויקטים</span>
+          </button>
+          <button class="quick-action-btn" onclick="showTab('tab-miner'); loadMinerChats();">
+            <span>⛏️</span><span>כריית שיחות ותובנות AI</span>
+          </button>
+          <button class="quick-action-btn" onclick="showTab('tab-sim'); document.getElementById('simInput').focus();">
+            <span>🧪</span><span>סימולטור מענה חי בזמן אמת</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Visual Analytics Grid -->
+      <div class="analytics-grid">
+        <!-- Donut Ring Chart: Category Breakdown -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">התפלגות לפי קטגוריות</div>
+              <div class="card-desc">חלוקת ההוראות במאגר הזיכרון לפי סוגי הנחיות</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-svg-wrap">
+              <svg id="donutSvg" width="170" height="170" viewBox="0 0 42 42" style="transform: rotate(-90deg);"></svg>
+              <div class="chart-center-text">
+                <div class="chart-center-val" id="donutTotalVal">0</div>
+                <div class="chart-center-lbl">הוראות</div>
+              </div>
+            </div>
+            <div class="chart-legend" id="donutLegend">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Distribution Progress Bars -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">התפלגות לפי סביבות עבודה</div>
+              <div class="card-desc">חלוקת הכללים בין הפרופילים והמצבים השונים</div>
+            </div>
+            <button class="btn btn-subtle" onclick="showTab('tab-profiles')" style="font-size: 0.78rem; padding: 0.3rem 0.6rem;">נהל מצבים</button>
+          </div>
+          <div class="progress-bar-group" id="profileProgressList" style="padding: 0.5rem 0;">
+            <!-- Rendered via JS -->
+          </div>
+          <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">חלוקת היקף חוקים:</div>
+            <div id="scopeBreakdownBadges" style="display: flex; gap: 0.5rem;">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent System Activity / Logs Feed -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">יומן פעילות ועדכונים אחרונים</div>
+            <div class="card-desc">תיעוד סנכרונים, זיהוי פרויקטים ושינויים שבוצעו במערכת</div>
+          </div>
+        </div>
+        <div class="items-list" id="overviewRecentLogs">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-chat" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">הזנת זיכרון בשיחה חופשית (Conversational AI Brain)</div>
+            <div class="card-desc">דבר עם המערכת בדיוק כפי שאתה מדבר עם מודל AI. המשפט יסווג, ייבדק מול סתירות וישובץ אוטומטית.</div>
+          </div>
+        </div>
+
+        <div class="chat-box">
+          <input type="text" id="chatInput" class="chat-input" placeholder="למשל: 'האתר שלי הוא example.com' או 'אל תשתמש ב-any ב-TypeScript' או 'זה לעסקים: תחתום בברכה, הצוות'" onkeydown="if(event.key==='Enter') submitChatMemory()">
+          <button class="btn btn-primary" onclick="submitChatMemory()">זכור ושמור ↵</button>
+        </div>
+
+        <div class="example-chips">
+          <div class="chip" onclick="fillChatInput('האתר הרשמי שלי הוא https://example.com')">עובדה: האתר הרשמי</div>
+          <div class="chip" onclick="fillChatInput('לעולם אל תמחק הערות קוד או תיעוד קיים')">איסור: לא למחוק הערות</div>
+          <div class="chip" onclick="fillChatInput('זה לעסקים: תצרף תמיד בסיום מענה בברכה, הצוות')">מצב עסקי: חתימה</div>
+          <div class="chip" onclick="fillChatInput('מצב קוד: הקפד על פונקציות נקיות וטיפוסי TypeScript מדויקים')">מצב קוד: הקלדה קפדנית</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">פעילות אחרונה וזיכרונות שנלמדו משיחות</div>
+            <div class="card-desc" id="chatFeedSubtitle">זיכרונות שנשמרו בערוצי השיחה וב-MCP</div>
+          </div>
+        </div>
+        <div class="items-list" id="chatHistoryList"></div>
+      </div>
+    </section>
+
+    <section id="tab-facts" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">עובדות ונתונים קבועים (Facts & Data)</div>
+            <div class="card-desc">מידע יסוד שמוזרק ישירות לכל קובצי ההנחיות למענה של 0 שניות ללא סריקות.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal('facts')">+ הוסף עובדה</button>
+        </div>
+        <div class="items-list" id="factsList"></div>
+      </div>
+    </section>
+
+    <section id="tab-constraints" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">מגבלות ואיסורים מחייבים (Negative Constraints)</div>
+            <div class="card-desc">הנחיות 'אל תעשה' מחמירות למניעת סריקות קבצים מיותרות, מחיקות קוד או שינויי הגדרות.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal('constraints')">+ הוסף איסור</button>
+        </div>
+        <div class="items-list" id="constraintsList"></div>
+      </div>
+    </section>
+
+    <section id="tab-commands" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">פקודות ופעולות ביצוע (Commands & Signatures)</div>
+            <div class="card-desc">פקודות פעולה מפורשות, כגון חתימות אישיות או פורמט תשובה קבוע.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal('commands')">+ הוסף פקודה</button>
+        </div>
+        <div class="items-list" id="commandsList"></div>
+      </div>
+    </section>
+
+    <section id="tab-styles" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">סגנון וטון מענה (Tone & Persona)</div>
+            <div class="card-desc">שפת מענה, תמציתיות, רמת רשמיות וסגנון כתיבה מבוקש.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal('styles')">+ הוסף סגנון</button>
+        </div>
+        <div class="items-list" id="stylesList"></div>
+      </div>
+    </section>
+
+    <section id="tab-instructions" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">הנחיות מותנות (Contextual Directives)</div>
+            <div class="card-desc">כללים שמופעלים רק בתנאים מסוימים או לפי פרויקט.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal('instructions')">+ הוסף הנחיה מותנית</button>
+        </div>
+        <div class="items-list" id="instructionsList"></div>
+      </div>
+    </section>
+
+    <section id="tab-context_files" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">מסמכי הקשר ותיעוד פרויקט (Context Documents)</div>
+            <div class="card-desc">הגדרת קבצי תיעוד, מפרטים או ארכיטקטורה הנלווים להנחיות ה-AI עבור פרויקטים ספציפיים.</div>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal('context_files')">+ הוסף מסמך הקשר</button>
+        </div>
+        <div class="items-list" id="contextFilesList"></div>
+      </div>
+    </section>
+
+    <section id="tab-projects" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ניהול תיקיות פרויקטים מסונכרנות (Target Projects)</div>
+            <div class="card-desc">רשימת כל הפרויקטים במחשב שאליהם מוזרקים קבצי הכללים (GEMINI.md, CLAUDE.md, .cursorrules).</div>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-subtle" onclick="rescanProjects()">סרוק תיקיות במחשב 🔍</button>
+            <button class="btn btn-primary" onclick="openAddProjectPath()">+ הוסף תיקייה ידנית</button>
+          </div>
+        </div>
+
+        <div style="display: none; padding: 1rem; background: var(--bg-card-subtle); border-radius: var(--radius-md); margin-bottom: 1rem;" id="addPathBox">
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">הזן נתיב תיקייה מלא במחשב:</div>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="newFolderPathInput" class="chat-input" placeholder="C:\Projects\MyProject" style="flex: 1;">
+            <button class="btn btn-primary" onclick="submitAddProjectPath()">הוסף וסנכרן</button>
+            <button class="btn btn-subtle" onclick="document.getElementById('addPathBox').style.display='none'">ביטול</button>
+          </div>
+        </div>
+
+        <div class="items-list" id="projectsList">
+          <div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">טוען פרויקטים מסונכרנים...</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-profiles" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">מצבי שיחה וסביבות עבודה (Dynamic Conversational Modes)</div>
+            <div class="card-desc">הגדרת מילות הפעלה ('זה לעסקים', 'מצב קוד') וזיהוי סמנטי אוטונומי.</div>
+          </div>
+        </div>
+        <div class="items-list" id="profilesList"></div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tab-page">
+      <div class="card" style="border-right: 4px solid var(--accent);">
+        <div class="card-header">
+          <div>
+            <div class="card-title" style="display: flex; align-items: center; gap: 0.5rem;">
+              <span>🎯 היקף סנכרון חוקים (Sync Scope Mode)</span>
+              <span class="scope-badge scope-badge-recommend">ברירת מחדל: מאקרו</span>
+            </div>
+            <div class="card-desc">בחר כיצד והיכן הכללים והזיכרונות מוזרקים במחשב. השוואה בין רמת דיוק לצריכת משאבים וניקיון קבצים:</div>
+          </div>
+        </div>
+
+        <div class="scope-grid">
+          <!-- Option 1: Macro (Default) -->
+          <div class="scope-card" id="card_scope_macro" onclick="setSyncScope('macro')">
+            <div>
+              <div class="scope-header">
+                <div class="scope-title">
+                  <input type="radio" name="syncScopeRadio" id="radio_scope_macro" value="macro" style="margin-left: 0.4rem;" onchange="setSyncScope('macro')">
+                  <span>🌐 מאקרו (גלובלי בלבד)</span>
+                </div>
+                <span class="scope-badge scope-badge-recommend">מומלץ כברירת מחדל</span>
+              </div>
+              <div class="scope-desc">
+                סנכרון ישיר ומרוכז לקבצי הקונפיגורציה הראשיים של כלי ה-AI במחשב (User Level: Claude Code, Gemini CLI, Antigravity Knowledge, שרתי MCP).
+                <br><strong style="color: var(--text-primary);">אפס יצירה או שינוי של קבצים בתוך תיקיות הפרויקטים!</strong>
+              </div>
+            </div>
+            <div class="scope-metrics">
+              <div class="scope-metric-row">
+                <span class="scope-metric-label">⚡ צריכת משאבים:</span>
+                <span class="scope-metric-val" style="color: var(--success); font-weight: 700;">אפסית (100% חיסכון בדיסק וב-Git)</span>
+              </div>
+              <div class="scope-metric-row">
+                <span class="scope-metric-label">🎯 רמת דיוק:</span>
+                <span class="scope-metric-val" style="color: var(--accent); font-weight: 600;">אחידה וכוללת לכל הכלים במחשב</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Option 2: Micro -->
+          <div class="scope-card" id="card_scope_micro" onclick="setSyncScope('micro')">
+            <div>
+              <div class="scope-header">
+                <div class="scope-title">
+                  <input type="radio" name="syncScopeRadio" id="radio_scope_micro" value="micro" style="margin-left: 0.4rem;" onchange="setSyncScope('micro')">
+                  <span>📁 מיקרו (פר פרויקט בלבד)</span>
+                </div>
+                <span class="scope-badge scope-badge-secondary">הזרקה מקומית</span>
+              </div>
+              <div class="scope-desc">
+                הזרקה פרטנית של קבצי חוקים (GEMINI.md, CLAUDE.md, .cursorrules) ישירות לתוך כל אחת מתיקיות הפרויקטים שהוגדרו. ללא קבצים גלובליים.
+              </div>
+            </div>
+            <div class="scope-metrics">
+              <div class="scope-metric-row">
+                <span class="scope-metric-label">⚡ צריכת משאבים:</span>
+                <span class="scope-metric-val" style="color: var(--warning); font-weight: 600;">בינונית (יצירת קבצים בכל תיקייה)</span>
+              </div>
+              <div class="scope-metric-row">
+                <span class="scope-metric-label">🎯 רמת דיוק:</span>
+                <span class="scope-metric-val" style="color: var(--accent); font-weight: 600;">נקודתית לסביבות ללא חוקים גלובליים</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Option 3: Both -->
+          <div class="scope-card" id="card_scope_both" onclick="setSyncScope('both')">
+            <div>
+              <div class="scope-header">
+                <div class="scope-title">
+                  <input type="radio" name="syncScopeRadio" id="radio_scope_both" value="both" style="margin-left: 0.4rem;" onchange="setSyncScope('both')">
+                  <span>🔄 שניהם (היברידי)</span>
+                </div>
+                <span class="scope-badge scope-badge-secondary">כיסוי מקסימלי</span>
+              </div>
+              <div class="scope-desc">
+                סנכרון כפול מלא: כתיבה הן לקבצים הגלובליים של המערכת והן הזרקה מקומית לכל תיקיות הפרויקטים. יתירות מרבית בכל מקום.
+              </div>
+            </div>
+            <div class="scope-metrics">
+              <div class="scope-metric-row">
+                <span class="scope-metric-label">⚡ צריכת משאבים:</span>
+                <span class="scope-metric-val" style="color: var(--danger); font-weight: 600;">מרבית (סנכרון כפול לכל המערכת)</span>
+              </div>
+              <div class="scope-metric-row">
+                <span class="scope-metric-label">🎯 רמת דיוק:</span>
+                <span class="scope-metric-val" style="color: var(--success); font-weight: 700;">100% כיסוי לכל מודל, כלי ופרויקט</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-card-subtle); border-radius: var(--radius-md); padding: 0.85rem 1.1rem; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <input type="checkbox" id="set_cleanProjectsOnMacro" onchange="updateSetting('cleanProjectsOnMacro', this.checked)">
+            <label for="set_cleanProjectsOnMacro" style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+              נקה אוטומטית קבצי חוקים מתיקיות הפרויקטים בעת סנכרון מאקרו
+            </label>
+          </div>
+          <button class="btn btn-subtle" onclick="cleanProjectsNow()" style="font-size: 0.825rem; padding: 0.45rem 0.85rem;">
+            🧹 נקה עכשיו קבצי חוקים מכל תיקיות הפרויקטים
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">מתגי מערכת מודולריים (Settings Toggles)</div>
+            <div class="card-desc">הפעל או כבה כל מנגנון בקלות לפי העדפתך האישית.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600;">סנכרון אוטומטי בעת שינוי (Auto-Sync)</div>
+              <div style="font-size: 0.825rem; color: var(--text-secondary);">הזרקה מיידית של כללים לכל הפרויקטים בעת הוספה או עריכה</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set_autoSync" onchange="updateSetting('autoSyncOnChange', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600;">שרת MCP ל-Claude Desktop</div>
+              <div style="font-size: 0.825rem; color: var(--text-secondary);">מאפשר ל-Claude לשמור ולקרוא זיכרונות בזמן אמת מתוך השיחה</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set_claudeMcp" onchange="updateSetting('injectClaudeMcp', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600;">שרת MCP וסנכרון ידע ל-Antigravity</div>
+              <div style="font-size: 0.825rem; color: var(--text-secondary);">חיבור ישיר ל-Google Antigravity לשליפה ושמירה אוטונומית</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set_antigravity" onchange="updateSetting('injectAntigravityKnowledge', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600;">מעקב שינויים ברקע (Folder Watcher)</div>
+              <div style="font-size: 0.825rem; color: var(--text-secondary);">זיהוי אוטומטי של פרויקטים חדשים בתיקיות הפיתוח</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set_watcher" onchange="updateSetting('folderWatcherActive', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600;">הפעל אוטומטית עם עליית Windows (Run on Startup)</div>
+              <div style="font-size: 0.825rem; color: var(--text-secondary);">טוען את המערכת ברקע במגש המערכת בכל פעם שהמחשב נדלק</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set_autostart" onchange="toggleAutostart(this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ייצוא וייבוא חכם (100% מקומי ופרטי)</div>
+            <div class="card-desc">שמור גיבוי מלא של כל הזיכרונות שלך או שחזר ממחשב אחר בלחיצה אחת.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn btn-subtle" onclick="exportBackup()">📥 הורד קובץ גיבוי מלא (JSON)</button>
+          <button class="btn btn-subtle" onclick="document.getElementById('importFileInput').click()">📤 שחזר מגיבוי JSON</button>
+          <input type="file" id="importFileInput" style="display: none;" accept=".json" onchange="importBackup(this.files[0])">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">גיבוי וסנכרון ענן פרטי (GitHub Gist)</div>
+            <div class="card-desc">סנכרון מוצפן ומאובטח ל-Gist פרטי ב-GitHub לגיבוי בין מחשבים (הטוקן נשמר במחשבך בלבד).</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">GitHub Personal Access Token (עם הרשאת gist):</label>
+            <input type="password" id="gistTokenInput" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" onchange="updateSetting('githubGistToken', this.value)">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Gist ID (נוצר אוטומטית בעת גיבוי ראשון):</label>
+            <input type="text" id="gistIdInput" class="form-input" placeholder="למשל: a1b2c3d4e5f6..." onchange="updateSetting('githubGistId', this.value)">
+          </div>
+          <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+            <button class="btn btn-primary" onclick="cloudPush()">☁️ גבה עכשיו ל-Gist</button>
+            <button class="btn btn-subtle" onclick="cloudPull()">⬇️ שחזר מ-Gist ענן</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Tab: Chat Miner -->
+    <section id="tab-miner" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">כריית שיחות ותובנות (AI Chat Miner)</div>
+            <div class="card-desc">סריקה וניתוח של שיחות קודמות מכל כלי הפיתוח (Antigravity, Copilot, Cline/Roo, Claude, Cursor) לחילוץ אוטומטי של חוקים ומידע.</div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <select id="minerAppSelect" class="form-input" style="width: auto; padding: 0.45rem 0.8rem; font-size: 0.85rem;" onchange="loadMinerChats()">
+              <option value="antigravity">Google Antigravity</option>
+              <option value="copilot">VS Code GitHub Copilot</option>
+              <option value="cline">Cline & Roo Code</option>
+              <option value="claude">Claude Code</option>
+              <option value="cursor">Cursor IDE</option>
+              <option value="windsurf">Windsurf IDE</option>
+              <option value="chatgpt">ChatGPT Export</option>
+              <option value="all">סריקה מקיפה - כל התוכנות</option>
+            </select>
+            <button class="btn btn-primary" onclick="loadMinerChats()">סרוק שיחות 🔄</button>
+          </div>
+        </div>
+        <div id="minerChatList" class="items-list">
+          <div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">לחץ על 'סרוק שיחות' כדי לאתר שיחות במחשב...</div>
+        </div>
+      </div>
+
+      <div class="card" id="minerCandidatesCard" style="display: none;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">חוקים ותובנות שזוהו בשיחה זו</div>
+            <div class="card-desc">לחץ על 'שמור לזיכרון' כדי לאשר ולהכניס את הכלל למאגר הקבוע.</div>
+          </div>
+        </div>
+        <div id="minerCandidatesList" class="items-list"></div>
+      </div>
+    </section>
+
+    <!-- 10. Tab: Simulator -->
+    <section id="tab-sim" class="tab-page">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">סימולטור מענה והפעלת מצבים חי (Live AI Simulator)</div>
+            <div class="card-desc">הקלד כל שאלה או פנייה כדי לבחון בזמן אמת איזה מצב יופעל ואילו חוקים יוזרקו.</div>
+          </div>
+        </div>
+
+        <div class="chat-box">
+          <input type="text" id="simInput" class="chat-input" placeholder="למשל: 'אני רוצה לקבל הצעת מחיר עבור שרת חדש' או 'איך לכתוב פונקציה נקייה?'" onkeydown="if(event.key==='Enter') runSimulation()">
+          <button class="btn btn-primary" onclick="runSimulation()">בדוק סימולציה ↵</button>
+        </div>
+
+        <div class="example-chips">
+          <div class="chip" onclick="fillSimInput('אני מעוניין בהצעת מחיר לתחזוקת מחשבים בעסק שלי')">שאלה עסקית: הצעת מחיר</div>
+          <div class="chip" onclick="fillSimInput('כתוב לי פונקציית TypeScript שמסננת אובייקטים לפי מפתח')">שאלת קוד: TypeScript</div>
+          <div class="chip" onclick="fillSimInput('ספר לי מה השעה ומה מזג האוויר')">שיחה כללית יומיומית</div>
+        </div>
+      </div>
+
+      <div class="card" id="simResultsCard" style="display: none;">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="simDetectedTitle">תוצאת הסימולציה</div>
+            <div class="card-desc" id="simDetectedReason"></div>
+          </div>
+        </div>
+        <div id="simRulesList" class="items-list"></div>
+      </div>
+    </section>
+
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="itemModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">הוספת פריט חדש</div>
+        <button class="action-icon-btn" onclick="closeModal()">✕</button>
+      </div>
+
+      <div id="modalFormContent"></div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+        <button class="btn btn-subtle" onclick="closeModal()">ביטול</button>
+        <button class="btn btn-primary" id="btnSaveModal" onclick="saveModalItem()">שמור פריט</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastBox">הפעולה הושלמה בהצלחה</div>
+
+  <script>
+    let appState = {
+      currentProfile: 'default',
+      profiles: {},
+      memory: {},
+      conflicts: [],
+      settings: {}
+    };
+
+    let modalCategory = 'facts';
+    let modalEditId = null;
+
+    function initTheme() {
+      const saved = localStorage.getItem('aimemory_theme') || 'light';
+      document.body.setAttribute('data-theme', saved);
+      document.getElementById('themeIcon').innerText = saved === 'dark' ? '☀️' : '🌙';
+    }
+
+    function toggleTheme() {
+      const cur = document.body.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      localStorage.setItem('aimemory_theme', next);
+      document.getElementById('themeIcon').innerText = next === 'dark' ? '☀️' : '🌙';
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-page').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+
+      const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (btn) btn.classList.add('active');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastBox');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    async function loadData() {
+      try {
+        const [resMem, resStatus, resAnalytics] = await Promise.all([
+          fetch('/api/memory').then(r => r.json()),
+          fetch('/api/status').then(r => r.json()),
+          fetch('/api/analytics').then(r => r.json()).catch(() => null)
+        ]);
+
+        if (resMem && resMem.success) {
+          appState.memory = resMem.data || {};
+          appState.currentProfile = resMem.currentProfile || 'default';
+        }
+        if (resStatus && resStatus.success) {
+          appState.profiles = resStatus.profiles || {};
+          appState.conflicts = resStatus.conflicts || [];
+          appState.settings = resStatus.settings || {};
+        }
+        if (resAnalytics && resAnalytics.success) {
+          appState.analytics = resAnalytics;
+        }
+
+        renderAll();
+      } catch (err) {
+        console.error('Failed to load data:', err);
+      }
+    }
+
+    function renderAll() {
+      renderHeader();
+      renderAnalytics();
+      renderConflictBanner();
+      renderChatHistory();
+      renderCategoryList('facts', 'factsList');
+      renderCategoryList('constraints', 'constraintsList');
+      renderCategoryList('commands', 'commandsList');
+      renderCategoryList('styles', 'stylesList');
+      renderCategoryList('instructions', 'instructionsList');
+      renderCategoryList('context_files', 'contextFilesList');
+      renderProfiles();
+      renderSettings();
+      loadProjects();
+    }
+
+    function renderAnalytics() {
+      const a = appState.analytics;
+      if (!a) return;
+
+      // 1. KPI Cards
+      const tot = a.totals || {};
+      const elTotal = document.getElementById('kpiTotalDirectives');
+      if (elTotal) elTotal.innerText = tot.total_directives || 0;
+      const elTotalSub = document.getElementById('kpiTotalDirectivesSub');
+      const activePct = tot.total_directives > 0 ? Math.round(((tot.active_directives || 0) / tot.total_directives) * 100) : 100;
+      if (elTotalSub) elTotalSub.innerText = `${tot.active_directives || 0} פעילות (${activePct}%)`;
+
+      const elActive = document.getElementById('kpiActiveDirectives');
+      if (elActive) elActive.innerText = tot.active_directives || 0;
+      const elActiveSub = document.getElementById('kpiActiveDirectivesSub');
+      if (elActiveSub) elActiveSub.innerText = `${tot.inactive_directives || 0} מושבתות`;
+
+      const elProj = document.getElementById('kpiTotalProjects');
+      if (elProj) elProj.innerText = tot.total_projects || 0;
+      const elProjSub = document.getElementById('kpiTotalProjectsSub');
+      if (elProjSub) elProjSub.innerText = `${tot.active_projects || 0} פרויקטים פעילים`;
+
+      const elProf = document.getElementById('kpiActiveProfile');
+      if (elProf) elProf.innerText = (a.active_profile && a.active_profile.name) ? a.active_profile.name : 'ראשי';
+      const elProfSub = document.getElementById('kpiActiveProfileSub');
+      if (elProfSub) elProfSub.innerText = `${tot.total_profiles || 1} סביבות עבודה מוגדרות`;
+
+      // 2. SVG Donut Chart
+      renderDonutChart(a.categories, tot.total_directives || 0);
+
+      // 3. Profiles Progress Bars
+      renderProfileProgress(a.profiles || []);
+
+      // 4. Scope Breakdown
+      const scopeCounts = a.scope_counts || { global: 0, project: 0 };
+      const elScope = document.getElementById('scopeBreakdownBadges');
+      if (elScope) {
+        const totalScope = (scopeCounts.global + scopeCounts.project) || 1;
+        const gPct = Math.round((scopeCounts.global / totalScope) * 100);
+        const pPct = Math.round((scopeCounts.project / totalScope) * 100);
+        elScope.innerHTML = `
+          <span class="badge badge-fact">גלובלי: ${scopeCounts.global} (${gPct}%)</span>
+          <span class="badge badge-cmd">פר-פרויקט: ${scopeCounts.project} (${pPct}%)</span>
+        `;
+      }
+
+      // 5. Recent Logs Feed
+      renderRecentLogs(a.recent_logs || []);
+    }
+
+    function renderDonutChart(cats, total) {
+      const svg = document.getElementById('donutSvg');
+      const legend = document.getElementById('donutLegend');
+      const centerVal = document.getElementById('donutTotalVal');
+      if (!svg || !legend) return;
+
+      if (centerVal) centerVal.innerText = total;
+      svg.innerHTML = '';
+      legend.innerHTML = '';
+
+      // Background track circle
+      const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      bgCircle.setAttribute('cx', '21');
+      bgCircle.setAttribute('cy', '21');
+      bgCircle.setAttribute('r', '15.91549430918954');
+      bgCircle.setAttribute('fill', 'transparent');
+      bgCircle.setAttribute('stroke', 'var(--border-color)');
+      bgCircle.setAttribute('stroke-width', '4.5');
+      svg.appendChild(bgCircle);
+
+      if (!cats || total === 0) {
+        legend.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem; padding: 0.5rem 0;">אין עדיין הוראות מוזנות.</div>`;
+        return;
+      }
+
+      let accumulated = 0;
+      const catEntries = Object.entries(cats);
+
+      catEntries.forEach(([key, info]) => {
+        const count = info.total || 0;
+        const pct = total > 0 ? (count / total) * 100 : 0;
+        const color = info.color || '#0ea5e9';
+
+        if (pct > 0) {
+          const slice = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          slice.setAttribute('cx', '21');
+          slice.setAttribute('cy', '21');
+          slice.setAttribute('r', '15.91549430918954');
+          slice.setAttribute('fill', 'transparent');
+          slice.setAttribute('stroke', color);
+          slice.setAttribute('stroke-width', '4.5');
+          slice.setAttribute('stroke-dasharray', `${pct} ${100 - pct}`);
+          slice.setAttribute('stroke-dashoffset', `${-accumulated}`);
+          slice.style.transition = 'stroke-dasharray 0.4s ease';
+          svg.appendChild(slice);
+          accumulated += pct;
+        }
+
+        // Add Legend Item
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        const targetTab = (key === 'rules') ? 'tab-instructions' : (key === 'contextFiles' ? 'tab-context_files' : `tab-${key}`);
+        item.onclick = () => showTab(targetTab);
+        item.title = `לחץ לצפייה ב-${info.name}`;
+        item.innerHTML = `
+          <div class="legend-dot-name">
+            <span class="legend-dot" style="background-color: ${color};"></span>
+            <span>${info.icon || '📌'} ${info.name}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <span class="legend-count">${count}</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">(${Math.round(pct)}%)</span>
+          </div>
+        `;
+        legend.appendChild(item);
+      });
+    }
+
+    function renderProfileProgress(profiles) {
+      const container = document.getElementById('profileProgressList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!profiles || profiles.length === 0) {
+        container.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">אין נתוני פרופילים</div>`;
+        return;
+      }
+
+      const maxCount = Math.max(...profiles.map(p => p.total_directives || 0), 1);
+
+      profiles.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'progress-item';
+        const pct = Math.round(((p.total_directives || 0) / maxCount) * 100);
+        const isCur = p.is_active || (p.id === appState.currentProfile);
+
+        item.innerHTML = `
+          <div class="progress-labels">
+            <span style="display: flex; align-items: center; gap: 0.4rem;">
+              <span>${escapeHtml(p.name || p.id)}</span>
+              ${isCur ? `<span class="badge badge-style" style="font-size: 0.68rem; padding: 0.1rem 0.4rem;">פעיל כעת</span>` : ''}
+            </span>
+            <span style="color: var(--text-secondary);">${p.total_directives || 0} הוראות</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width: ${Math.max(pct, 4)}%; background: ${isCur ? 'var(--accent)' : 'var(--border-hover)'};"></div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderRecentLogs(logs) {
+      const container = document.getElementById('overviewRecentLogs');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1rem;">אין יומן פעילות אחרונה להצגה.</div>`;
+        return;
+      }
+
+      const reversed = [...logs].reverse();
+      reversed.slice(0, 6).forEach(log => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        const timeStr = log.timestamp ? (log.timestamp.split('T')[1] ? log.timestamp.split('T')[1].substring(0, 8) : log.timestamp) : '';
+        row.innerHTML = `
+          <div class="item-content">
+            <div class="item-title-row">
+              <span class="badge badge-style">${escapeHtml(log.action || 'פעולה')}</span>
+              <span class="item-title" style="font-weight: 600; font-size: 0.88rem;">${escapeHtml(log.details || log.message || '')}</span>
+            </div>
+            ${timeStr ? `<div class="item-detail" style="font-size: 0.75rem; color: var(--text-muted);">${timeStr}</div>` : ''}
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderHeader() {
+      const sel = document.getElementById('profileSelector');
+      sel.innerHTML = '';
+      for (const [pid, pinfo] of Object.entries(appState.profiles)) {
+        const opt = document.createElement('option');
+        opt.value = pid;
+        opt.innerText = pinfo.name || pid;
+        if (pid === appState.currentProfile) opt.selected = true;
+        sel.appendChild(opt);
+      }
+    }
+
+    function renderConflictBanner() {
+      const ban = document.getElementById('conflictBanner');
+      if (appState.conflicts && appState.conflicts.length > 0) {
+        const c = appState.conflicts[0];
+        document.getElementById('conflictTitle').innerText = '⚠️ ' + (c.title || 'זוהתה סתירה בזיכרון');
+        document.getElementById('conflictDesc').innerText = c.description || '';
+        ban.style.display = 'flex';
+      } else {
+        ban.style.display = 'none';
+      }
+    }
+
+    function renderCategoryList(cat, elementId) {
+      const container = document.getElementById(elementId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      const items = appState.memory[cat] || [];
+      if (items.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 2rem;">אין פריטים בקטגוריה זו.</div>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+
+        let mainText = item.name || item.constraint || item.aspect || item.instruction || '';
+        let subText = item.value || item.alternative_or_why || item.details || item.when_to_apply || '';
+
+        row.innerHTML = `
+          <div class="item-content">
+            <div class="item-title-row">
+              <span class="item-title">${escapeHtml(mainText)}</span>
+            </div>
+            ${subText && subText !== mainText ? `<div class="item-detail">${escapeHtml(subText)}</div>` : ''}
+          </div>
+          <div class="item-actions">
+            <button class="action-icon-btn" onclick="openEditModal('${cat}', '${item.id}')">ערוך</button>
+            <button class="action-icon-btn danger" onclick="deleteItem('${cat}', '${item.id}')">מחק</button>
+            <label class="switch">
+              <input type="checkbox" ${item.active !== false ? 'checked' : ''} onchange="toggleItem('${cat}', '${item.id}', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderChatHistory() {
+      const container = document.getElementById('chatHistoryList');
+      container.innerHTML = '';
+
+      const allItems = [];
+      const cats = [
+        { key: 'facts', name: 'עובדה', badge: 'badge-fact' },
+        { key: 'constraints', name: 'איסור', badge: 'badge-constraint' },
+        { key: 'commands', name: 'פקודה', badge: 'badge-cmd' },
+        { key: 'styles', name: 'סגנון', badge: 'badge-style' },
+        { key: 'instructions', name: 'הנחיה', badge: 'badge-inst' }
+      ];
+
+      cats.forEach(c => {
+        (appState.memory[c.key] || []).forEach(it => {
+          allItems.push({ ...it, _cat: c.key, _catName: c.name, _badgeClass: c.badge });
+        });
+      });
+
+      if (allItems.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 2rem;">אין עדיין זיכרונות פעילים. הקלד משהו למעלה!</div>`;
+        return;
+      }
+
+      allItems.slice(0, 20).forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        let mainText = item.name || item.constraint || item.aspect || item.instruction || '';
+        let subText = item.value || item.alternative_or_why || item.details || item.when_to_apply || '';
+
+        row.innerHTML = `
+          <div class="item-content">
+            <div class="item-title-row">
+              <span class="badge ${item._badgeClass}">${item._catName}</span>
+              <span class="item-title">${escapeHtml(mainText)}</span>
+            </div>
+            ${subText && subText !== mainText ? `<div class="item-detail">${escapeHtml(subText)}</div>` : ''}
+          </div>
+          <div class="item-actions">
+            <button class="action-icon-btn" onclick="openEditModal('${item._cat}', '${item.id}')">ערוך</button>
+            <button class="action-icon-btn danger" onclick="deleteItem('${item._cat}', '${item.id}')">מחק</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderProfiles() {
+      const container = document.getElementById('profilesList');
+      container.innerHTML = '';
+
+      for (const [pid, pinfo] of Object.entries(appState.profiles)) {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        const isCur = pid === appState.currentProfile;
+
+        row.innerHTML = `
+          <div class="item-content">
+            <div class="item-title-row">
+              <span class="item-title">${escapeHtml(pinfo.name || pid)}</span>
+              ${isCur ? `<span class="badge badge-style">פעיל כרגע</span>` : ''}
+            </div>
+            <div class="item-detail">מילות הפעלה: ${escapeHtml((pinfo.trigger_keywords || []).join(', ') || 'ללא מילים מפורשות')}</div>
+          </div>
+          <div class="item-actions">
+            ${!isCur ? `<button class="btn btn-subtle" onclick="switchProfile('${pid}')">הפעל מצב זה</button>` : ''}
+          </div>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    function highlightScopeCard(mode) {
+      ['macro', 'micro', 'both'].forEach(m => {
+        const card = document.getElementById(`card_scope_${m}`);
+        const radio = document.getElementById(`radio_scope_${m}`);
+        if (card) {
+          if (m === mode) {
+            card.classList.add('selected');
+          } else {
+            card.classList.remove('selected');
+          }
+        }
+        if (radio) radio.checked = (m === mode);
+      });
+    }
+
+    async function setSyncScope(mode) {
+      if (!['macro', 'micro', 'both'].includes(mode)) return;
+      if (!appState.settings) appState.settings = {};
+      appState.settings.syncScopeMode = mode;
+      highlightScopeCard(mode);
+      const radio = document.getElementById(`radio_scope_${mode}`);
+      if (radio) radio.checked = true;
+      await updateSetting('syncScopeMode', mode);
+    }
+
+    async function cleanProjectsNow() {
+      if (!confirm('האם להסיר את כל קבצי ובלוקי החוקים מכל תיקיות הפרויקטים המוגדרות? (קבצי המאקרו הגלובליים יישארו פעילים עבור כלי ה-AI)')) return;
+      try {
+        const res = await fetch('/api/clean_projects', { method: 'POST' }).then(r => r.json());
+        if (res.success) {
+          showToast(`✅ ${res.message || 'תיקיות הפרויקטים נוקו בהצלחה'}`);
+          await loadData();
+        } else {
+          showToast(`שגיאה: ${res.error || 'ניקוי נכשל'}`);
+        }
+      } catch (e) {
+        showToast('שגיאת תקשורת עם השרת');
+      }
+    }
+
+    function renderSettings() {
+      const s = appState.settings || {};
+      const curMode = s.syncScopeMode || 'macro';
+      highlightScopeCard(curMode);
+      if (document.getElementById('set_cleanProjectsOnMacro')) {
+        document.getElementById('set_cleanProjectsOnMacro').checked = s.cleanProjectsOnMacro === true;
+      }
+      if (document.getElementById('set_autoSync')) document.getElementById('set_autoSync').checked = s.autoSyncOnChange !== false;
+      if (document.getElementById('set_claudeMcp')) document.getElementById('set_claudeMcp').checked = s.injectClaudeMcp !== false;
+      if (document.getElementById('set_antigravity')) document.getElementById('set_antigravity').checked = s.injectAntigravityKnowledge !== false;
+      if (document.getElementById('set_watcher')) document.getElementById('set_watcher').checked = s.folderWatcherActive !== false;
+      if (document.getElementById('gistTokenInput') && s.githubGistToken) document.getElementById('gistTokenInput').value = s.githubGistToken;
+      if (document.getElementById('gistIdInput') && s.githubGistId) document.getElementById('gistIdInput').value = s.githubGistId;
+    }
+
+    async function submitChatMemory() {
+      const inp = document.getElementById('chatInput');
+      const text = inp.value.trim();
+      if (!text) return;
+
+      inp.value = '';
+      try {
+        const res = await fetch('/api/remember', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(res.message || 'הזיכרון נשמר וסונכרן בהצלחה!');
+          await loadData();
+        } else {
+          showToast('שגיאה: ' + (res.error || 'נכשל בניתוח'));
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת עם השרת');
+      }
+    }
+
+    function fillChatInput(text) {
+      const inp = document.getElementById('chatInput');
+      inp.value = text;
+      inp.focus();
+    }
+
+    async function switchProfile(profileId) {
+      try {
+        const res = await fetch('/api/profile/switch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ profile_id: profileId })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast('הוחלפה סביבת עבודה ל: ' + profileId);
+          await loadData();
+        }
+      } catch (err) {
+        showToast('שגיאה בהחלפת פרופיל');
+      }
+    }
+
+    async function toggleItem(category, itemId, active) {
+      try {
+        await fetch('/api/toggle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category, item_id: itemId, active })
+        });
+        showToast('הסטטוס עודכן');
+        await loadData();
+      } catch (err) {
+        showToast('שגיאה בעדכון הסטטוס');
+      }
+    }
+
+    async function deleteItem(category, itemId) {
+      if (!confirm('האם למחוק פריט זה ממאגר הזיכרון?')) return;
+      try {
+        await fetch('/api/items', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category, item_id: itemId })
+        });
+        showToast('הפריט נמחק בהצלחה');
+        await loadData();
+      } catch (err) {
+        showToast('שגיאה במחיקת פריט');
+      }
+    }
+
+    async function triggerSync() {
+      const btn = document.getElementById('btnSyncAll');
+      btn.innerText = '⏳ מסנכרן...';
+      try {
+        const res = await fetch('/api/sync', { method: 'POST' }).then(r => r.json());
+        if (res.success) {
+          showToast(`סנכרון מלא הושלם! ${res.folders_synced} נתיבים עודכנו.`);
+        }
+      } catch (err) {
+        showToast('שגיאה בסנכרון');
+      } finally {
+        btn.innerText = 'סנכרן לכל הפרויקטים';
+      }
+    }
+
+    async function resolveTopConflict() {
+      if (!appState.conflicts || appState.conflicts.length === 0) return;
+      const c = appState.conflicts[0];
+      const targetId = (c.item_b && c.item_b.id) || (c.existing_item && c.existing_item.id);
+      try {
+        await fetch('/api/conflicts/resolve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ conflict_id: c.id, action: 'delete', target_item_id: targetId })
+        });
+        showToast('הסתירה נפתרה בהצלחה!');
+        await loadData();
+      } catch (err) {
+        showToast('שגיאה בפתרון סתירה');
+      }
+    }
+
+    async function updateSetting(key, val) {
+      try {
+        await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [key]: val })
+        });
+        showToast('ההגדרה נשמרה');
+      } catch (err) {
+        showToast('שגיאה בשמירת הגדרה');
+      }
+    }
+
+    function exportBackup() {
+      window.location.href = '/api/export';
+    }
+
+    async function importBackup(file) {
+      if (!file) return;
+      const text = await file.text();
+      try {
+        const res = await fetch('/api/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: text
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast('הגיבוי שוחזר בהצלחה!');
+          await loadData();
+        } else {
+          showToast('שגיאה ביבוא: ' + (res.error || 'קובץ לא תקין'));
+        }
+      } catch (err) {
+        showToast('שגיאה בשחזור הגיבוי');
+      }
+    }
+
+    function openAddModal(cat) {
+      modalCategory = cat;
+      modalEditId = null;
+      document.getElementById('modalTitle').innerText = 'הוספת פריט חדש';
+      buildModalForm(cat, {});
+      document.getElementById('itemModal').classList.add('active');
+    }
+
+    function openEditModal(cat, itemId) {
+      modalCategory = cat;
+      modalEditId = itemId;
+      const item = (appState.memory[cat] || []).find(x => x.id === itemId) || {};
+      document.getElementById('modalTitle').innerText = 'עריכת פריט';
+      buildModalForm(cat, item);
+      document.getElementById('itemModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('itemModal').classList.remove('active');
+    }
+
+    function buildModalForm(cat, item) {
+      const container = document.getElementById('modalFormContent');
+      if (cat === 'facts') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">שם המידע / כותרת:</label>
+            <input type="text" id="m_field1" class="form-input" value="${escapeHtml(item.name || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">ערך / קישור / תוכן:</label>
+            <input type="text" id="m_field2" class="form-input" value="${escapeHtml(item.value || '')}">
+          </div>
+        `;
+      } else if (cat === 'constraints') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">איסור או מגבלה מחייבת:</label>
+            <input type="text" id="m_field1" class="form-input" value="${escapeHtml(item.constraint || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">הנחיה חלופית או הסבר:</label>
+            <input type="text" id="m_field2" class="form-input" value="${escapeHtml(item.alternative_or_why || '')}">
+          </div>
+        `;
+      } else if (cat === 'commands') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">שם הפקודה:</label>
+            <input type="text" id="m_field1" class="form-input" value="${escapeHtml(item.name || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">פירוט הפעולה או חתימה:</label>
+            <input type="text" id="m_field2" class="form-input" value="${escapeHtml(item.details || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">באיזה מקרה לבצע:</label>
+            <input type="text" id="m_field3" class="form-input" value="${escapeHtml(item.trigger_case || 'בכל מקרה רלוונטי')}">
+          </div>
+        `;
+      } else if (cat === 'styles') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">היבט סגנוני:</label>
+            <input type="text" id="m_field1" class="form-input" value="${escapeHtml(item.aspect || 'סגנון מענה')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">הוראת סגנון / שפה:</label>
+            <input type="text" id="m_field2" class="form-input" value="${escapeHtml(item.instruction || '')}">
+          </div>
+        `;
+      } else if (cat === 'instructions') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">הנחיה מותנית:</label>
+            <input type="text" id="m_field1" class="form-input" value="${escapeHtml(item.instruction || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">מתי ליישם:</label>
+            <input type="text" id="m_field2" class="form-input" value="${escapeHtml(item.when_to_apply || 'בכל שיחה ומענה')}">
+          </div>
+        `;
+      } else if (cat === 'context_files') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">שם המסמך / כותרת:</label>
+            <input type="text" id="m_field1" class="form-input" value="${escapeHtml(item.name || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">נתיב קובץ / תוכן מקוצר:</label>
+            <input type="text" id="m_field2" class="form-input" value="${escapeHtml(item.path || item.details || '')}">
+          </div>
+        `;
+      }
+    }
+
+    async function saveModalItem() {
+      const f1 = document.getElementById('m_field1') ? document.getElementById('m_field1').value.trim() : '';
+      const f2 = document.getElementById('m_field2') ? document.getElementById('m_field2').value.trim() : '';
+      const f3 = document.getElementById('m_field3') ? document.getElementById('m_field3').value.trim() : '';
+
+      let payload = { category: modalCategory };
+      if (modalCategory === 'facts') payload.data = { name: f1, value: f2 };
+      else if (modalCategory === 'constraints') payload.data = { constraint: f1, alternative_or_why: f2 };
+      else if (modalCategory === 'commands') payload.data = { name: f1, details: f2, trigger_case: f3 };
+      else if (modalCategory === 'styles') payload.data = { aspect: f1, instruction: f2 };
+      else if (modalCategory === 'instructions') payload.data = { instruction: f1, when_to_apply: f2 };
+      else if (modalCategory === 'context_files') payload.data = { name: f1, path: f2, details: f2 };
+
+      try {
+        if (modalEditId) {
+          payload.item_id = modalEditId;
+          await fetch('/api/items', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          await fetch('/api/items', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+        closeModal();
+        showToast('הפריט נשמר בהצלחה!');
+        await loadData();
+      } catch (err) {
+        showToast('שגיאה בשמירת פריט');
+      }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text).replace(/[&<>"']/g, function (m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
+    // Enhanced Global Search with Category & Status Filters
+    let searchDebounceTimer = null;
+    let rawSearchResults = [];
+    let rawSearchQuery = '';
+    let searchCatFilter = 'all';
+    let searchStatusFilter = 'all';
+
+    function onGlobalSearch(query) {
+      clearTimeout(searchDebounceTimer);
+      if (!query || query.trim().length < 2) {
+        closeSearchResults();
+        return;
+      }
+      searchDebounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}`).then(r => r.json());
+          if (res.success) {
+            renderSearchResults(res.query, res.results || []);
+          }
+        } catch (err) {
+          console.error('Search error:', err);
+        }
+      }, 250);
+    }
+
+    function renderSearchResults(query, results) {
+      rawSearchQuery = query;
+      rawSearchResults = results || [];
+      const card = document.getElementById('searchResultsCard');
+      card.style.display = 'block';
+      applySearchFilters();
+    }
+
+    function setSearchCatFilter(cat) {
+      searchCatFilter = cat;
+      document.querySelectorAll('#searchFilterChips [id^="chip_cat_"]').forEach(el => {
+        el.classList.toggle('active', el.id === `chip_cat_${cat}`);
+      });
+      applySearchFilters();
+    }
+
+    function setSearchStatusFilter(status) {
+      searchStatusFilter = status;
+      document.querySelectorAll('#searchFilterChips [id^="chip_status_"]').forEach(el => {
+        el.classList.toggle('active', el.id === `chip_status_${status}`);
+      });
+      applySearchFilters();
+    }
+
+    function applySearchFilters() {
+      if (!rawSearchResults) return;
+      let filtered = [...rawSearchResults];
+
+      if (searchCatFilter !== 'all') {
+        filtered = filtered.filter(res => {
+          const c = res.category;
+          if (searchCatFilter === 'instructions') return c === 'instructions' || c === 'rules';
+          if (searchCatFilter === 'context_files') return c === 'context_files' || c === 'contextFiles';
+          return c === searchCatFilter;
+        });
+      }
+
+      if (searchStatusFilter === 'active') {
+        filtered = filtered.filter(res => res.item && res.item.active !== false);
+      } else if (searchStatusFilter === 'inactive') {
+        filtered = filtered.filter(res => res.item && res.item.active === false);
+      }
+
+      renderSearchResultsList(filtered);
+    }
+
+    function renderSearchResultsList(results) {
+      const card = document.getElementById('searchResultsCard');
+      const list = document.getElementById('searchResultsList');
+      const title = document.getElementById('searchResultsTitle');
+      const desc = document.getElementById('searchResultsDesc');
+
+      const catLabels = {
+        'all': 'כל הקטגוריות', 'facts': 'עובדות', 'constraints': 'איסורים',
+        'commands': 'פקודות', 'styles': 'סגנון', 'instructions': 'הנחיות', 'context_files': 'מסמכים'
+      };
+      const statusLabels = { 'all': 'הכל', 'active': 'פעיל בלבד', 'inactive': 'מושבת בלבד' };
+
+      if (title) title.innerText = `תוצאות חיפוש עבור "${rawSearchQuery}" (${results.length} מתוך ${rawSearchResults.length})`;
+      if (desc) desc.innerText = `סינון: ${catLabels[searchCatFilter] || searchCatFilter} | סטטוס: ${statusLabels[searchStatusFilter] || searchStatusFilter}`;
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (results.length === 0) {
+        list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">לא נמצאו תוצאות התואמות לסינון הנוכחי.</div>`;
+      } else {
+        const catMap = {
+          'facts': { name: 'עובדה', cls: 'badge-fact' },
+          'constraints': { name: 'איסור', cls: 'badge-constraint' },
+          'commands': { name: 'פקודה', cls: 'badge-cmd' },
+          'styles': { name: 'סגנון', cls: 'badge-style' },
+          'instructions': { name: 'הנחיה', cls: 'badge-inst' },
+          'rules': { name: 'הנחיה', cls: 'badge-inst' },
+          'context_files': { name: 'מסמך', cls: 'badge-fact' },
+          'contextFiles': { name: 'מסמך', cls: 'badge-fact' }
+        };
+
+        results.forEach(res => {
+          const it = res.item;
+          const row = document.createElement('div');
+          row.className = 'item-row';
+          let mainText = it.name || it.constraint || it.aspect || it.instruction || '';
+          let subText = it.value || it.alternative_or_why || it.details || it.when_to_apply || '';
+          const cInfo = catMap[res.category] || { name: res.category, cls: 'badge-fact' };
+
+          row.innerHTML = `
+            <div class="item-content">
+              <div class="item-title-row">
+                <span class="badge badge-style">${escapeHtml(res.profile || '')}</span>
+                <span class="badge ${cInfo.cls}">${cInfo.name}</span>
+                <span class="item-title">${escapeHtml(mainText)}</span>
+              </div>
+              ${subText ? `<div class="item-detail">${escapeHtml(subText)}</div>` : ''}
+            </div>
+            <div class="item-actions">
+              <button class="action-icon-btn" onclick="openEditModal('${res.category}', '${it.id}')">ערוך</button>
+              <button class="action-icon-btn danger" onclick="deleteItem('${res.category}', '${it.id}')">מחק</button>
+              <label class="switch">
+                <input type="checkbox" ${it.active !== false ? 'checked' : ''} onchange="toggleItem('${res.category}', '${it.id}', this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+      }
+      card.style.display = 'block';
+    }
+
+    function closeSearchResults() {
+      const card = document.getElementById('searchResultsCard');
+      card.style.display = 'none';
+      document.getElementById('globalSearchInput').value = '';
+      rawSearchResults = [];
+      rawSearchQuery = '';
+    }
+
+    // Chat Miner Multi-App Support
+    async function loadMinerChats() {
+      const appSelect = document.getElementById('minerAppSelect');
+      const app = appSelect ? appSelect.value : 'antigravity';
+      const list = document.getElementById('minerChatList');
+      list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">סורק שיחות...</div>`;
+      try {
+        const res = await fetch(`/api/miner/chats?app=${encodeURIComponent(app)}`).then(r => r.json());
+        if (res.success && res.chats && res.chats.length > 0) {
+          list.innerHTML = '';
+          res.chats.forEach(chat => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            const appLabel = chat.app || app;
+            row.innerHTML = `
+              <div class="item-content">
+                <div class="item-title-row">
+                  <span class="badge badge-inst">${escapeHtml(appLabel)}</span>
+                  <span class="item-title">${escapeHtml(chat.title)}</span>
+                </div>
+                <div class="item-detail">עודכן: ${escapeHtml(chat.time_str || '')} | גודל: ${chat.size_kb || 0} KB</div>
+              </div>
+              <div class="item-actions">
+                <button class="btn btn-primary" onclick="analyzeChat('${escapeHtml(chat.path.replace(/\\/g, '\\\\'))}')">חלץ חוקים ומידע 🔍</button>
+              </div>
+            `;
+            list.appendChild(row);
+          });
+        } else {
+          list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">לא נמצאו שיחות עבור תוכנה זו במחשב.</div>`;
+        }
+      } catch (err) {
+        list.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 1.5rem;">שגיאה בטעינת שיחות.</div>`;
+      }
+    }
+
+    let lastMinerCandidates = [];
+    async function analyzeChat(fpath) {
+      showToast('מנתח שיחה ומחלץ תובנות...');
+      try {
+        const res = await fetch('/api/miner/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: fpath })
+        }).then(r => r.json());
+
+        if (res.success) {
+          lastMinerCandidates = res.candidates || [];
+          renderMinerCandidates(lastMinerCandidates);
+        } else {
+          showToast('שגיאה בניתוח השיחה');
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת בניתוח');
+      }
+    }
+
+    function renderMinerCandidates(candidates) {
+      const card = document.getElementById('minerCandidatesCard');
+      const list = document.getElementById('minerCandidatesList');
+      list.innerHTML = '';
+
+      if (candidates.length === 0) {
+        list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">לא זוהו חוקים או עובדות חדשות בשיחה זו.</div>`;
+      } else {
+        candidates.forEach((c, idx) => {
+          const row = document.createElement('div');
+          row.className = 'item-row';
+          const catMap = {
+            'facts': { name: 'עובדה', cls: 'badge-fact' },
+            'constraints': { name: 'איסור', cls: 'badge-constraint' },
+            'commands': { name: 'פקודה', cls: 'badge-cmd' },
+            'styles': { name: 'סגנון', cls: 'badge-style' },
+            'instructions': { name: 'הנחיה', cls: 'badge-inst' }
+          };
+          const cInfo = catMap[c.category] || { name: c.category, cls: 'badge-cmd' };
+          const profBadge = c.target_profile && c.target_profile !== 'default' ? `<span class="badge badge-style" style="margin-right: 4px;">פרופיל: ${escapeHtml(c.target_profile)}</span>` : '';
+          const reasonText = c.reason ? `<div class="item-detail" style="color: var(--accent); font-size: 0.78rem;">💡 ${escapeHtml(c.reason)}</div>` : '';
+
+          row.innerHTML = `
+            <div class="item-content">
+              <div class="item-title-row">
+                <span class="badge ${cInfo.cls}">${cInfo.name}</span>
+                ${profBadge}
+                <span class="item-title">${escapeHtml(c.title || c.text)}</span>
+              </div>
+              ${c.text && c.text !== c.title ? `<div class="item-detail">${escapeHtml(c.text)}</div>` : ''}
+              ${reasonText}
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-primary" onclick="saveCandidateIndex(${idx})">שמור לזיכרון ↵</button>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+      }
+      card.style.display = 'block';
+      card.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function saveCandidateIndex(idx) {
+      const c = lastMinerCandidates[idx];
+      if (!c) return;
+
+      try {
+        let res;
+        if (c.category && c.data && Object.keys(c.data).length > 0) {
+          res = await fetch('/api/items', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              category: c.category,
+              data: {
+                ...c.data,
+                scope: c.scope || 'global',
+                target_profile: c.target_profile || 'default'
+              }
+            })
+          }).then(r => r.json());
+        } else {
+          res = await fetch('/api/remember', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: c.text || c.title })
+          }).then(r => r.json());
+        }
+
+        if (res && res.success) {
+          showToast(res.message || 'החוק נשמר בהצלחה בזיכרון!');
+          await loadData();
+        } else {
+          showToast('שגיאה בשמירה: ' + ((res && res.error) || ''));
+        }
+      } catch (err) {
+        showToast('שגיאה בשמירה לזיכרון');
+      }
+    }
+
+    // Autostart with Windows
+    async function loadAutostart() {
+      try {
+        const res = await fetch('/api/autostart').then(r => r.json());
+        if (res.success && document.getElementById('set_autostart')) {
+          document.getElementById('set_autostart').checked = !!res.enabled;
+        }
+      } catch (err) {
+        console.error('Failed to get autostart status:', err);
+      }
+    }
+
+    async function toggleAutostart(enable) {
+      try {
+        const res = await fetch('/api/autostart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enable })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(enable ? 'המערכת תופעל אוטומטית עם Windows' : 'ההפעלה האוטומטית בוטלה');
+        } else {
+          showToast('שגיאה בעדכון הפעלה אוטומטית');
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת');
+      }
+    }
+
+    // Prompt & Mode Simulator
+    function fillSimInput(text) {
+      const inp = document.getElementById('simInput');
+      inp.value = text;
+      inp.focus();
+    }
+
+    async function runSimulation() {
+      const inp = document.getElementById('simInput');
+      const prompt = inp.value.trim();
+      if (!prompt) return;
+
+      showToast('מריץ סימולציה סמנטית...');
+      try {
+        const res = await fetch('/api/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        }).then(r => r.json());
+
+        if (res.success && res.simulation) {
+          renderSimulationResults(res.simulation);
+        } else {
+          showToast('שגיאה בהרצת סימולציה');
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת בסימולציה');
+      }
+    }
+
+    function renderSimulationResults(sim) {
+      const card = document.getElementById('simResultsCard');
+      const list = document.getElementById('simRulesList');
+      document.getElementById('simDetectedTitle').innerText = `מצב מופעל: ${sim.detected_profile_name}`;
+      document.getElementById('simDetectedReason').innerText = `${sim.reason}${sim.signature ? ` | חתימה: "${sim.signature}"` : ''}`;
+      list.innerHTML = '';
+
+      const rules = sim.rules_applied || {};
+      const allApplied = [];
+      (rules.facts || []).forEach(f => allApplied.push({ type: 'עובדה', text: `${f.name}: ${f.value}`, cls: 'badge-fact' }));
+      (rules.constraints || []).forEach(c => allApplied.push({ type: 'איסור', text: `${c.constraint} (${c.alternative_or_why || ''})`, cls: 'badge-constraint' }));
+      (rules.commands || []).forEach(m => allApplied.push({ type: 'פקודה', text: `${m.name}: ${m.details}`, cls: 'badge-cmd' }));
+      (rules.styles || []).forEach(s => allApplied.push({ type: 'סגנון', text: `${s.aspect}: ${s.instruction}`, cls: 'badge-style' }));
+
+      if (allApplied.length === 0) {
+        list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1rem;">במצב זה אין כללים פעילים ספציפיים (פועל במצב נקי).</div>`;
+      } else {
+        allApplied.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'item-row';
+          row.innerHTML = `
+            <div class="item-content">
+              <div class="item-title-row">
+                <span class="badge ${item.cls}">${item.type}</span>
+                <span class="item-title">${escapeHtml(item.text)}</span>
+              </div>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      card.style.display = 'block';
+      card.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Projects Management
+    async function loadProjects() {
+      const container = document.getElementById('projectsList');
+      if (!container) return;
+      try {
+        const res = await fetch('/api/paths').then(r => r.json());
+        if (res.success && res.paths) {
+          if (res.paths.length === 0) {
+            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">לא הוגדרו נתיבי פרויקטים. לחץ על 'סרוק תיקיות במחשב'.</div>`;
+            return;
+          }
+          container.innerHTML = '';
+          res.paths.forEach(p => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+              <div class="item-content">
+                <div class="item-title-row">
+                  <span class="item-title">${escapeHtml(p.name || p.path)}</span>
+                  ${p.active !== false ? '<span class="badge badge-fact">מסונכרן</span>' : '<span class="badge" style="background:var(--border-color);color:var(--text-muted);">מושהה</span>'}
+                </div>
+                <div class="item-detail" style="direction: ltr; text-align: right; font-family: monospace; unicode-bidi: plaintext;">${escapeHtml(p.path)}</div>
+              </div>
+              <div class="item-actions">
+                <button class="action-icon-btn danger" onclick="deleteProject('${escapeHtml(p.path.replace(/\\/g, '\\\\'))}')">הסר</button>
+                <label class="switch">
+                  <input type="checkbox" ${p.active !== false ? 'checked' : ''} onchange="toggleProject('${escapeHtml(p.path.replace(/\\/g, '\\\\'))}', this.checked)">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            `;
+            container.appendChild(row);
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load projects:', err);
+      }
+    }
+
+    function openAddProjectPath() {
+      const box = document.getElementById('addPathBox');
+      box.style.display = 'block';
+      document.getElementById('newFolderPathInput').focus();
+    }
+
+    async function submitAddProjectPath() {
+      const inp = document.getElementById('newFolderPathInput');
+      const p = inp.value.trim();
+      if (!p) return;
+
+      try {
+        const res = await fetch('/api/paths', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: p })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast('הפרויקט נוסף וסונכרן בהצלחה!');
+          inp.value = '';
+          document.getElementById('addPathBox').style.display = 'none';
+          await loadProjects();
+        } else {
+          showToast('שגיאה בהוספת פרויקט: ' + (res.error || ''));
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת בהוספת פרויקט');
+      }
+    }
+
+    async function toggleProject(path, active) {
+      try {
+        await fetch('/api/paths/toggle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path, active })
+        });
+        showToast(active ? 'סנכרון הפרויקט הופעל' : 'הסנכרון לפרויקט הושהה');
+        await loadProjects();
+      } catch (err) {
+        showToast('שגיאה בעדכון סטטוס הפרויקט');
+      }
+    }
+
+    async function deleteProject(path) {
+      if (!confirm('האם להסיר פרויקט זה מרשימת הסנכרון (יוסרו קבצי ההנחיות מהתיקייה)?')) return;
+      try {
+        const res = await fetch('/api/paths', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path, clean_files: true })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast('הפרויקט הוסר בהצלחה');
+          await loadProjects();
+        } else {
+          showToast('שגיאה בהסרת פרויקט: ' + (res.error || ''));
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת במחיקת פרויקט');
+      }
+    }
+
+    async function rescanProjects() {
+      showToast('סורק תיקיות פרויקטים במחשב...');
+      try {
+        const res = await fetch('/api/paths/rescan', { method: 'POST' }).then(r => r.json());
+        if (res.success) {
+          showToast(`סריקה הושלמה! נוספו ${res.newly_added} פרויקטים חדשים (סה"כ: ${res.total}).`);
+          await loadProjects();
+        }
+      } catch (err) {
+        showToast('שגיאה בסריקת פרויקטים');
+      }
+    }
+
+    // GitHub Gist Cloud Sync
+    async function cloudPush() {
+      const tok = document.getElementById('gistTokenInput') ? document.getElementById('gistTokenInput').value.trim() : '';
+      const gid = document.getElementById('gistIdInput') ? document.getElementById('gistIdInput').value.trim() : '';
+      showToast('מגבה נתונים ל-GitHub Gist...');
+      try {
+        const res = await fetch('/api/cloud/push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: tok, gist_id: gid })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(res.message || 'הגיבוי ל-GitHub Gist הושלם בהצלחה!');
+          if (res.gist_id && document.getElementById('gistIdInput')) {
+            document.getElementById('gistIdInput').value = res.gist_id;
+          }
+          await loadData();
+        } else {
+          showToast('שגיאה בגיבוי: ' + (res.message || 'נכשל'));
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת בגיבוי לענן');
+      }
+    }
+
+    async function cloudPull() {
+      const tok = document.getElementById('gistTokenInput') ? document.getElementById('gistTokenInput').value.trim() : '';
+      const gid = document.getElementById('gistIdInput') ? document.getElementById('gistIdInput').value.trim() : '';
+      if (!confirm('האם לשחזר את הזיכרון מ-GitHub Gist? פעולה זו תעדכן את כל הזיכרונות המקומיים.')) return;
+      showToast('משחזר נתונים מ-GitHub Gist...');
+      try {
+        const res = await fetch('/api/cloud/pull', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: tok, gist_id: gid })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(res.message || 'השחזור הושלם בהצלחה!');
+          await loadData();
+        } else {
+          showToast('שגיאה בשחזור: ' + (res.message || 'נכשל'));
+        }
+      } catch (err) {
+        showToast('שגיאת תקשורת בשחזור מהענן');
+      }
+    }
+
+    initTheme();
+    loadData();
+    loadAutostart();
+    loadProjects();
+    setInterval(loadData, 5000);
+  </script>
+</body>
+</html>

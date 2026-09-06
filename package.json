@@ -1,0 +1,14 @@
+{
+  "name": "ai-memory-hub",
+  "version": "1.0.0",
+  "description": "Universal AI Memory Hub & Auto-Injector for Claude Desktop, Antigravity, and AI Editors",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "cors": "^2.8.5"
+  }
+}

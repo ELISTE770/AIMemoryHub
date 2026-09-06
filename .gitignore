@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+build/
+dist/
+dist_installer/
+*.spec
+
+# Windows Binaries (hosted on GitHub Releases)
+*.exe
+
+# Node
+node_modules/
+
+# Local database (auto-generated on first run), plus the safety copies save_db/load_db
+# keep beside it: memory.json.bak, memory.json.corrupt-*, memory.json.before-import-*
+data/memory.json*
+*.env
+*.key
+*.token
+
+# Per-project AI rule files (keep repository clean from personal rules)
+GEMINI.md
+CLAUDE.md
+.cursorrules
+.windsurfrules
+.clinerules
+.copilot-instructions.md
+.github/copilot-instructions.md
+
+# Test artifacts
+.pytest_cache/
+
+# Local / OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
