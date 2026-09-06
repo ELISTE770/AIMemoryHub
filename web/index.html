@@ -2926,6 +2926,15 @@
     loadData();
     loadAutostart();
     loadProjects();
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialTab = urlParams.get('tab');
+    if (initialTab) { showTab(initialTab.startsWith('tab-') ? initialTab : 'tab-' + initialTab); }
+    const initialTheme = urlParams.get('theme');
+    if (initialTheme) {
+      document.body.setAttribute('data-theme', initialTheme);
+      const ti = document.getElementById('themeIcon');
+      if (ti) ti.innerText = initialTheme === 'dark' ? '☀️' : '🌙';
+    }
     setInterval(loadData, 5000);
   </script>
 </body>
